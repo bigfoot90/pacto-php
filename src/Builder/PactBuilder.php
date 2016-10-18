@@ -134,11 +134,7 @@ class PactBuilder implements PactBuilderInterface
      */
     public function AddInteraction(PactInteraction $newInteraction)
     {
-        if (!isset($this->interactions)) {
-            $this->interactions = [$newInteraction->ToArray()];
-        } else {
-            array_push($this->interactions, $newInteraction->ToArray());
-        }
+        $this->interactions[] = $newInteraction->ToArray();
 
         return $this;
     }

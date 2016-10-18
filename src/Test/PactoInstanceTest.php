@@ -6,16 +6,35 @@ use Pact\Phpacto\Diff\Diff;
 use Pact\Phpacto\Matcher\BodyMatcher;
 use Pact\Phpacto\Matcher\HeadersMatcher;
 use Pact\Phpacto\Matcher\StatusCodeMatcher;
-use Pact\Phpacto\Pact\Pact;
+use Pact\Phpacto\Pact;
 use Pact\Phpacto\Test\Output\MismatchDiffOutput;
 use Psr\Http\Message\ResponseInterface;
 
 class PactoInstanceTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Closure
+     */
     private $onSetup;
+
+    /**
+     * @var \Closure
+     */
     private $onTearDown;
+
+    /**
+     * @var \Closure
+     */
     private $makeRequest;
+
+    /**
+     * @var Pact
+     */
     private $pact;
+
+    /**
+     * @var bool
+     */
     private $strict;
 
     public function __construct($name, \Closure $onTearDown, \Closure $onSetUp, \Closure $makeRequest, Pact $p, $strict = false)
@@ -63,7 +82,7 @@ class PactoInstanceTest extends \PHPUnit_Framework_TestCase
         if ($diffs->hasMismatches()) {
             $output = new MismatchDiffOutput(true);
 
-            $this->fail(
+            self::fail(
                 $output->getOutputFor($diffs, $p)
             );
         }

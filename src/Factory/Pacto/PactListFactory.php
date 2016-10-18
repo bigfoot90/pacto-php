@@ -5,8 +5,8 @@ namespace Pact\Phpacto\Factory\Pacto;
 use Pact\Phpacto\Factory\ContractFactoryInterface;
 use Pact\Phpacto\Factory\PactoRequestFactoryInterface;
 use Pact\Phpacto\Factory\PactoResponseFactoryInterface;
-use Pact\Phpacto\Pact\Pact;
-use Pact\Phpacto\Pact\PactList;
+use Pact\Phpacto\Pact;
+use Pact\Phpacto\PactList;
 
 class PactListFactory implements ContractFactoryInterface
 {

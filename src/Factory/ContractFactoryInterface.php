@@ -2,7 +2,7 @@
 
 namespace Pact\Phpacto\Factory;
 
-use Pact\Phpacto\Pact\Pact;
+use Pact\Phpacto\Pact;
 
 interface ContractFactoryInterface
 {

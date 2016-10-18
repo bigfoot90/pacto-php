@@ -3,7 +3,7 @@
 namespace Pact\Phpacto\Test\Output;
 
 use Pact\Phpacto\Diff\Diff;
-use Pact\Phpacto\Pact\Pact;
+use Pact\Phpacto\Pact;
 
 class MismatchDiffOutput
 {

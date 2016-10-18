@@ -3,15 +3,25 @@
 namespace Pact\Phpacto\Test;
 
 use Pact\Phpacto\Factory\Pacto\PactListFactory;
-use Pact\Phpacto\Pact\Pact;
-use Pact\Phpacto\Pact\PactList;
+use Pact\Phpacto\Pact;
+use Pact\Phpacto\PactList;
 use Symfony\Component\Finder\Finder;
 
 class PactoIntegrationTest
 {
-    /** @var  PactList[] */
+    /**
+     * @var PactList[]
+     */
     public $contracts;
+
+    /**
+     * @var string
+     */
     private $providerName;
+
+    /**
+     * @var bool
+     */
     private $strict;
 
     public function __construct($providerName, $strict = false)
@@ -38,6 +48,8 @@ class PactoIntegrationTest
      * @param \Closure $makeRequest How make a ps7Request
      * @param \Closure $loadState   Setup the test state
      * @param \Closure $down        Setup up back the state
+     *
+     * @throws \Exception
      */
     public function honorContracts(\Closure $makeRequest, \Closure $loadState, \Closure $down)
     {
@@ -52,7 +64,7 @@ class PactoIntegrationTest
 
         foreach ($this->getAllPactsInContracts($contracts) as $pact) {
             $t = new PactoInstanceTest(
-               'testItHonorContract',
+               'PactoInstanceTest',
                $down,
                $loadState,
                $makeRequest,

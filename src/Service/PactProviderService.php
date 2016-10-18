@@ -4,7 +4,7 @@ namespace Pact\Phpacto\Service;
 
 use Pact\Phpacto\Builder\PactBuilder;
 use Pact\Phpacto\Builder\PactInteraction;
-use Pact\Phpacto\Config\Constants;
+use Pact\Phpacto\Pact;
 use Slim\Environment;
 
 /**
@@ -23,12 +23,10 @@ class PactProviderService
         $this->uri = $uri;
 
         $this->pactBuilder = new PactBuilder();
-        $this->pactBuilder->AddMetadata(
-                [
-                        'pact-specification' => ['version' => Constants::PACT_SPEC_VERSION],
-                        'pact-php' => ['version' => Constants::PACTO_PHP_VERSION],
-                ]
-        );
+        $this->pactBuilder->AddMetadata([
+            'pact-specification' => ['version' => Pact::PACT_SPEC_VERSION],
+            'pact-php' => ['version' => Pact::PACTO_PHP_VERSION],
+        ]);
     }
 
     public function ServiceConsumer($consumerName)
@@ -96,27 +94,26 @@ class PactProviderService
 
         $int = $this->interaction;
         $app->map(
-                $int->Path(),
-                function () use ($int, $app) {
-                    if (array_key_exists('headers', $int->Response())) {
-                        $app->response->headers->replace($int->Headers(RESPONSE));
-                    } else {
-                        $app->response->headers->clear();
-                    }
-
-                    if (array_key_exists('body', $int->Response())) {
-                        echo json_encode($int->Body(RESPONSE));
-                    }
+            $int->Path(),
+            function () use ($int, $app) {
+                if (array_key_exists('headers', $int->Response())) {
+                    $app->response->headers->replace($int->Headers(RESPONSE));
+                } else {
+                    $app->response->headers->clear();
                 }
 
+                if (array_key_exists('body', $int->Response())) {
+                    echo json_encode($int->Body(RESPONSE));
+                }
+            }
         )->via('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS');
 
         Environment::mock(
-                [
-                        'PATH_INFO' => $this->interaction->Path(),
-                        'HTTP_USER_AGENT' => sprintf('Pacto-Php %s', Constants::PACTO_PHP_VERSION),
-                        'USER_AGENT' => sprintf('Pacto-Php %s', Constants::PACTO_PHP_VERSION),
-                ]
+            [
+                'PATH_INFO' => $this->interaction->Path(),
+                'HTTP_USER_AGENT' => sprintf('Pacto-Php %s', Pact::PACTO_PHP_VERSION),
+                'USER_AGENT' => sprintf('Pacto-Php %s', Pact::PACTO_PHP_VERSION),
+            ]
         );
 
         $response = $app->invoke();
@@ -132,8 +129,6 @@ class PactProviderService
 
     public function WriteContract($filename = 'consumer-provider.json')
     {
-        $pact = $this->pactBuilder->Build();
-
         $filename = !is_null($this->pactBuilder) ? sprintf(
                 '%s/%s-%s.json',
                 $this->contractFolder,
@@ -145,6 +140,7 @@ class PactProviderService
             mkdir($this->contractFolder, 0777, true);
         }
 
+        $pact = $this->pactBuilder->Build();
         file_put_contents($filename, $pact);
     }
 }
